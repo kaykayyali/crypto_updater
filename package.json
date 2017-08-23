@@ -15,6 +15,9 @@
   "bugs": {
     "url": "https://github.com/kaykayyali/crypto_updater/issues"
   },
+  "engines": {
+    "node": "8.0.0"
+  },
   "homepage": "https://github.com/kaykayyali/crypto_updater#readme",
   "dependencies": {
     "bitfinex": "^1.0.3",
