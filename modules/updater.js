@@ -2,6 +2,8 @@
 const Bitfinex = require('bitfinex-promise');
 const bitfinex = new Bitfinex(process.env.BITFINEX_KEY, process.env.BITFINEX_SECRET);
 const request = require('request');
+const async_request = require('async-request');
+const request_url = 'https://api.coinmarketcap.com/v1/ticker/';
 
 class Updater {
 	constructor (options) {
@@ -12,7 +14,7 @@ class Updater {
 	// Primary functions
 	start () {
 		console.log("Booting up.");
-		if (!this.options.tickers || typeof this.options.tickers !== 'object') {
+		if (!this.options.ticker_map || typeof this.options.ticker_map !== 'object') {
 			throw new Error("No Tickers defined");
 		}
 		setInterval(() => {
@@ -22,16 +24,10 @@ class Updater {
 	}
 
 	async do_update() {
-		for (var i = 0; i < this.options.tickers.length; i++) {
-			var ticker = this.options.tickers[i];
-			await bitfinex.ticker(ticker).then((data, error) => {
-				if (error) {
-					throw new Error(error);
-				}
-				this.last_ticker_price[ticker] = data.last_price;
-			}).catch(function (error) {
-				console.log(ticker + " Failed to load");
-			});
+		for (var ticker in this.options.ticker_map){
+			var response = await async_request(request_url + ticker)
+			var json = JSON.parse(response.body)[0];
+			this.last_ticker_price[ticker] = json.price_usd;
 		}
 		this.prepare_update();
 		this.send_update();
@@ -45,8 +41,7 @@ class Updater {
 			body: "",
 			attachments:[]
 		}
-		for (var i = 0; i < this.options.tickers.length; i++) {
-			let ticker = this.options.tickers[i];
+		for (var ticker in this.options.ticker_map){
 			let ticker_data = this.translate_ticker(ticker);
 			var new_attachment = {
 				"color": "#F35A00",
@@ -62,8 +57,8 @@ class Updater {
 			this.payload.attachments.push(new_attachment);
 		}
 	}
-	send_update() {
 
+	send_update() {
 		request.post({
 			url: this.options.webhook_url,
 			json: true,
@@ -76,6 +71,7 @@ class Updater {
 			return console.log('WEBHOOK SUCCESS', body);
 		})
 	}
+
 	// Utilities
 	translate_ticker (ticker) {
 		if (this.options.ticker_map[ticker]) {
@@ -85,6 +81,7 @@ class Updater {
 			throw new Error("Ticker is not in map!");
 		}
 	}
+
 	random_num_between (min, max) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
