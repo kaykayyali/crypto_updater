@@ -8,6 +8,7 @@ const request_url = 'https://api.coinmarketcap.com/v1/ticker/';
 class Updater {
 	constructor (options) {
 		options = options || {};
+		this.secondary_webhook_url = process.env.SECONDARY_WEBHOOK_URL;
 		this.last_ticker_price = {};
 		this.options = options;
 	}
@@ -30,7 +31,7 @@ class Updater {
 			this.last_ticker_price[ticker] = json.price_usd;
 		}
 		this.prepare_update();
-		this.send_update();
+		this.send_updates();
 	}
 
 	prepare_update () { 
@@ -57,10 +58,15 @@ class Updater {
 			this.payload.attachments.push(new_attachment);
 		}
 	}
-
-	send_update() {
+	send_updates() {
+		this.send_update();
+		if (this.secondary_webhook_url) {
+			this.send_update(this.secondary_webhook_url);
+		}
+	}
+	send_update(url) {
 		request.post({
-			url: this.options.webhook_url,
+			url: url || this.options.webhook_url,
 			json: true,
 			body: this.payload
 		}, 
