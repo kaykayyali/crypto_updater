@@ -1,6 +1,4 @@
 "use strict"
-const Bitfinex = require('bitfinex-promise');
-const bitfinex = new Bitfinex(process.env.BITFINEX_KEY, process.env.BITFINEX_SECRET);
 const request = require('request');
 const async_request = require('async-request');
 const request_url = 'https://api.coinmarketcap.com/v1/ticker/';
@@ -47,11 +45,11 @@ class Updater {
 			var new_attachment = {
 				"color": "#F35A00",
 				"author_name": ticker_data.identifier,
-				"footer": "Bitfinex Api",
+				"footer": "Coin Marketcap Api",
 				"footer_icon": "https://www.ringcentral.com/blog/wp-content/uploads/2015/11/glip-logo-300x300.png",
 				"thumb_url": ticker_data.logo_url,
 				"title": "Latest Price",
-				"title_url": "https://api.bitfinex.com/v1/pubticker/" + ticker,
+				"title_url": "https://coinmarketcap.com/currencies/" + ticker,
 				"text": "**" + this.last_ticker_price[ticker] + "**",
 				"ts": Date.now()
 			}
