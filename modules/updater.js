@@ -11,10 +11,12 @@ class Updater {
 	}
 	// Primary functions
 	start () {
+		console.log("Booting up.");
 		if (!this.options.tickers || typeof this.options.tickers !== 'object') {
 			throw new Error("No Tickers defined");
 		}
 		setInterval(() => {
+			console.log("Tick");
 			this.do_update();
 		}, process.env.TIMER);
 	}
@@ -57,7 +59,6 @@ class Updater {
 				"text": "**" + this.last_ticker_price[ticker] + "**",
 				"ts": Date.now()
 			}
-			console.log(this.payload);
 			this.payload.attachments.push(new_attachment);
 		}
 	}

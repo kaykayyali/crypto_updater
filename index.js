@@ -1,4 +1,6 @@
 'use strict';
+const express = require('express');
+const app = express();
 var	Updater = require('./modules/updater');
 require('dotenv').config();
  
@@ -24,3 +26,14 @@ var options = {
 const updater = new Updater(options);
 
 updater.start();
+
+
+
+
+app.get('/status', function (req, res) {
+  res.send('Running');
+});
+var port = process.env.PORT || 3000;
+app.listen(port, function () {
+  console.log('Server Online');
+});
