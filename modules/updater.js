@@ -7,7 +7,7 @@ class Updater {
 	constructor (options) {
 		options = options || {};
 		this.secondary_webhook_url = process.env.SECONDARY_WEBHOOK_URL;
-		this.last_ticker_price = {};
+		this.last_ticker_data = {};
 		this.options = options;
 	}
 	// Primary functions
@@ -26,7 +26,7 @@ class Updater {
 		for (var ticker in this.options.ticker_map){
 			var response = await async_request(request_url + ticker)
 			var json = JSON.parse(response.body)[0];
-			this.last_ticker_price[ticker] = json.price_usd;
+			this.last_ticker_data[ticker] = json;
 		}
 		this.prepare_update();
 		this.send_updates();
@@ -48,9 +48,35 @@ class Updater {
 				"footer": "Coin Marketcap Api",
 				"footer_icon": "https://www.ringcentral.com/blog/wp-content/uploads/2015/11/glip-logo-300x300.png",
 				"thumb_url": ticker_data.logo_url,
-				"title": "Latest Price",
-				"title_url": "https://coinmarketcap.com/currencies/" + ticker,
-				"text": "**" + this.last_ticker_price[ticker] + "**",
+				"title": "Latest Data",
+				"title_link": "https://coinmarketcap.com/currencies/" + ticker,
+				"fields": [
+					{
+						"title": 'Price USD',
+						"value": "**" + this.last_ticker_data[ticker].price_usd + "**",
+						"short": true
+					},
+					{
+						"title": 'Price BTC',
+						"value": "**" + this.last_ticker_data[ticker].price_btc + "**",
+						"short": true
+					},
+					{
+						"title": '% Change 1hr',
+						"value": "**" + this.last_ticker_data[ticker].percent_change_1h + "**",
+						"short": true
+					},
+					{
+						"title": '% Change 24hr',
+						"value": "**" + this.last_ticker_data[ticker].percent_change_24h + "**",
+						"short": true
+					},
+					{
+						"title": '% Change 7d',
+						"value": "**" + this.last_ticker_data[ticker].percent_change_7d + "**",
+						"short": true
+					}
+				],
 				"ts": Date.now()
 			}
 			this.payload.attachments.push(new_attachment);
