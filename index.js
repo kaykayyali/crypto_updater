@@ -35,10 +35,6 @@ var options = {
 		'monero': {
 			logo_url: "https://pbs.twimg.com/profile_images/473825289630257152/PzHu2yli_200x200.png",
 			identifier: "Monero"
-		},
-		'dogecoin': {
-			logo_url: "http://dogecoin.com/imgs/dogecoin-300.png",
-			identifier: "DogeCoin"
 		}
 
 	}
