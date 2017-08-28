@@ -12,6 +12,14 @@ var options = {
 			logo_url: "https://i.pinimg.com/originals/ef/da/8b/efda8b6316786f2ff349f3065974249b.jpg",
 			identifier: "Bitcoin"
 		},
+		'ark': {
+                        logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/ark.png",
+                        identifier: "Ark"
+                },
+		'florincoin': {
+                        logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/florincoin.png",
+                        identifier: "FlorinCoin"
+                },
 		'litecoin': {
 			logo_url: "https://upload.wikimedia.org/wikipedia/commons/a/a8/Official_Litecoin_Logo.png",
 			identifier: "Litecoin"
