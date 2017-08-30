@@ -6,7 +6,6 @@ const request_url = 'https://api.coinmarketcap.com/v1/ticker/';
 class Updater {
 	constructor (options) {
 		options = options || {};
-		this.secondary_webhook_url = process.env.SECONDARY_WEBHOOK_URL;
 		this.last_ticker_data = {};
 		this.options = options;
 	}
@@ -19,7 +18,11 @@ class Updater {
 		setInterval(() => {
 			console.log("Tick");
 			this.do_update();
-		}, process.env.TIMER);
+		}, process.env.TIMER || 20000);
+		setInterval(() => {
+			console.log("High Alert Tick");
+			this.do_hr_update();
+		}, process.env.HR_TIMER || 10000);
 	}
 
 	async do_update() {
@@ -32,7 +35,19 @@ class Updater {
 		this.send_updates();
 	}
 
-	prepare_update () { 
+	async do_hr_update() {
+		for (var ticker in this.options.ticker_map){
+			let ticker_data = this.translate_ticker(ticker);
+			if (!ticker_data.high_alert) {continue};
+			var response = await async_request(request_url + ticker);
+			var json = JSON.parse(response.body)[0];
+			this.last_ticker_data[ticker] = json;
+		}
+		this.prepare_update(true);
+		this.send_updates();
+	}
+
+	prepare_update (high_alert) { 
 		this.payload = {
 			icon: "http://tinyurl.com/pn46fgp",
 			activity: "Price Update",
@@ -42,6 +57,8 @@ class Updater {
 		}
 		for (var ticker in this.options.ticker_map){
 			let ticker_data = this.translate_ticker(ticker);
+			if (high_alert && !ticker_data.high_alert) {continue};
+			console.log("Checking", ticker);
 			var new_attachment = {
 				"color": "#F35A00",
 				"author_name": ticker_data.identifier,
@@ -84,9 +101,6 @@ class Updater {
 	}
 	send_updates() {
 		this.send_update();
-		if (this.secondary_webhook_url) {
-			this.send_update(this.secondary_webhook_url);
-		}
 	}
 	send_update(url) {
 		request.post({
@@ -99,7 +113,7 @@ class Updater {
 		    	return console.error('WEBHOOK ERROR', err);
 			}
 			return console.log('WEBHOOK SUCCESS', body);
-		})
+		});
 	}
 
 	// Utilities

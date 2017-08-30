@@ -13,13 +13,13 @@ var options = {
 			identifier: "Bitcoin"
 		},
 		'ark': {
-                        logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/ark.png",
-                        identifier: "Ark"
+			logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/ark.png",
+			identifier: "Ark"
                 },
 		'florincoin': {
-                        logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/florincoin.png",
-                        identifier: "FlorinCoin"
-                },
+			logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/florincoin.png",
+			identifier: "FlorinCoin"
+		},
 		'litecoin': {
 			logo_url: "https://upload.wikimedia.org/wikipedia/commons/a/a8/Official_Litecoin_Logo.png",
 			identifier: "Litecoin"
@@ -32,9 +32,10 @@ var options = {
 			logo_url: "https://www.coingecko.com/assets/coin-250/golem-48555b0c9a0d0272875dfb577895096d.png",
 			identifier: "Golem"
 		},
-		'iota': {
-			logo_url: "http://www.hack4farming.com/img/IOTA_logo.png",
-			identifier: "IOTA"
+		'monaco': {
+			logo_url: "https://files.coinmarketcap.com/static/img/coins/32x32/monaco.png",
+			identifier: "Monaco",
+			high_alert: true
 		},
 		'neo': {
 			logo_url: "http://igaming.org/images/cryptocurrencies/crypto_news/image_large_662.jpg",
